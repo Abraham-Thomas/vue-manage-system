@@ -1,12 +1,22 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <!-- 使用Home组件 -->
+    <v-home></v-home>
+    <router-view></router-view>
   </div>
 </template>
+
+<script>
+// 加载引入Home组件
+import vHome from './components/common/Home'
+
+export default {
+  components: {
+    // 挂载 Home组件
+    vHome
+  }
+}
+</script>
 
 <style>
 @import "./assets/css/main.css";

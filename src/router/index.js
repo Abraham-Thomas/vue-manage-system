@@ -1,22 +1,30 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import vLogin from '../components/page/Login.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: Home
+    // 设置URL
+    path: '/home',
+    name: 'vHome',
+    // 设置对应组件
+    component: () => import('../components/common/Home.vue'),
+    children: [
+      {
+        path: 'child',
+        component: () => import('../components/page/Children.vue')
+      }
+    ]
   },
   {
-    path: '/about',
-    name: 'about',
+    path: '/login',
+    name: 'vLogin',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: vLogin
   }
 ]
 
