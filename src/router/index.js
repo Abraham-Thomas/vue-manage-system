@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import vLogin from '../components/page/Login.vue'
 
 Vue.use(VueRouter)
 
@@ -13,18 +12,26 @@ const routes = [
     component: () => import('../components/common/Home.vue'),
     children: [
       {
-        path: 'child',
-        component: () => import('../components/page/Children.vue')
+        path: 'child1',
+        component: () => import('../components/page/Children1.vue')
+      },
+      {
+        path: 'child2',
+        component: () => import('../components/page/Children2.vue')
+      },
+      {
+        path: 'child3',
+        component: () => import('../components/page/Children3.vue')
+      },
+      {
+        path: 'first',
+        component: () => import('../components/page/First.vue')
+      },
+      {
+        path: 'second',
+        component: () => import('../components/page/Second.vue')
       }
     ]
-  },
-  {
-    path: '/login',
-    name: 'vLogin',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: vLogin
   },
   {
     path: '/demo',
