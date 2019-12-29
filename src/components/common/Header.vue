@@ -1,77 +1,81 @@
 <template>
-  <div class="header">
-    <!-- 折叠按钮 -->
-    <div class="collapse-btn" @click="collapseChage">
-      <!-- 判断侧边栏打开状态 -->
-      <i v-if="!collapse" class="el-icon-s-fold"></i>
-      <i v-else class="el-icon-s-unfold"></i>
-    </div>
-
-    <!-- 系统logo -->
-    <div class="logo">后台管理系统</div>
-
-    <!-- 头部组件右边功能区 -->
-    <div class="header-right">
-      <div class="header-user-con">
-
-        <!-- 全屏显示 -->
-        <div class="btn-fullscreen" @click="handleFullScreen">
-          <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
-            <i class="el-icon-rank"></i>
-          </el-tooltip>
+    <!-- 公共头部组件 -->
+    <div class="header">
+        <!-- 折叠按钮 -->
+        <div class="collapse-btn" @click="collapseChage">
+          <!-- 通过v-if和v-else来判定侧边栏打开状态 -->
+          <i v-if="!collapse" class="el-icon-s-fold"></i>
+          <i v-else class="el-icon-s-unfold"></i>
         </div>
 
-      <!-- 消息中心 -->
-      <div class="btn-bell">
-        <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
-          <!-- 点击路由后跳转 -->
-          <router-link to="/tabs">
-            <i class="el-icon-bell"></i>
-          </router-link>
-        </el-tooltip>
-        <!-- 通过对message的判定，来决定是否显示小红点 -->
-        <span class="btn-bell-badge" v-if="message"></span>
-      </div>
+        <!-- 系统logo -->
+        <div class="logo">后台管理系统</div>
 
-      <!-- 用户头像 -->
-      <div class="user-avator">
-        <img src="../../assets/img/img.jpg">
-      </div>
+        <!-- 头部组件右边功能区 -->
+        <div class="header-right">
+            <div class="header-user-con">
 
-      <!-- 用户下拉名单：triggle属性配置 click激活，command点击菜单项触发事件 -->
-      <el-dropdown class="user-name" trigger="click" @command="handleCommand">
-        <span class="el-dropdown-link">
-          {{username}}
-          <i class="el-icon-caret-bottom"></i>
-        </span>
-        <!-- slot设置下拉列表 -->
-        <el-dropdown-menu slot="dropdown">
-          <a href="https://github.com/Abraham-Thomas/Project_collection" target="_blank">
-            <el-dropdown-item>项目仓库</el-dropdown-item>
-          </a>
-          <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+                <!-- 全屏显示 -->
+                <div class="btn-fullscreen" @click="handleFullScreen">
+                 <!--tooltip提供了两个主题：dark和light，通过 effect 设置主题 -->
+                    <!-- 通过三元表达式来设置不同的文字提示，placement属性控制文字提示出现的位置 -->
+                    <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
+                      <i class="el-icon-rank"></i>
+                    </el-tooltip>
+                </div>
 
-      </div>
+                <!-- 消息中心 -->
+                <div class="btn-bell">
+                <!--  -->
+                    <el-tooltip
+                        effect="dark"
+                        :content="message?`有${message}条未读消息`:`消息中心`"
+                        placement="bottom"
+                    >
+                        <router-link to="/tabs">
+                          <i class="el-icon-bell"></i>
+                        </router-link>
+                    </el-tooltip>
+                    <!-- 通过对message的判定，来决定是否显示小红点 -->
+                    <span class="btn-bell-badge" v-if="message"></span>
+                </div>
+
+                <!-- 用户头像 -->
+                <div class="user-avator">
+                  <img src="../../assets/img/img.jpg" />
+                </div>
+
+                <!-- 用户名下拉菜单：trigger属性配置 click 激活
+                command：点击菜单项触发的事件回调 -->
+                <el-dropdown class="user-name" trigger="click" @command="handleCommand">
+                    <span class="el-dropdown-link">
+                        {{username}}
+                        <i class="el-icon-caret-bottom"></i>
+                    </span>
+                    <!-- slot设置下拉列表 -->
+                    <el-dropdown-menu slot="dropdown">
+                        <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
+                          <el-dropdown-item>项目仓库</el-dropdown-item>
+                        </a>
+                        <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
-加载bus实现组件通信
+// 加载bus实现组件通信
 import bus from '../../utils/bus'
 
 export default {
   data () {
     return {
-      // 折叠栏初始状态
       collapse: false,
-      // 全屏初始状态
       fullscreen: false,
-      // 候补用户名
       name: 'AsunaCC',
-      // 未读信息初始值
       message: 2
     }
   },
@@ -79,10 +83,11 @@ export default {
   // 监控自定义属性
   computed: {
     username () {
-      // 从本地存储获取值
+      // 从本地存储中获取值
       let username = localStorage.getItem('ms_username')
-      // 对获取到的值进行判断，如果从本地能够获取到值，否则使用data中设置的值
-      return username ? username: this.name
+      // 对获取到的值进行判断，如果从本地存储能够获取到值，则使用该值，如果不能获取到，则使用 data 中设置的值
+      /* eslint no-unneeded-ternary: "error" */
+      return username ? username : this.name
     }
   },
 
@@ -90,20 +95,31 @@ export default {
     // 用户名下拉菜单选择事件
     handleCommand (command) {
       // 退出登录事件
-      if (command == 'loginout') {
+      if (command === 'loginout') {
         // 从本地存储中删除用户名
         localStorage.removeItem('ms_username')
-        // 跳转到登陆页面
+        // 跳转到登录页面
         this.$router.push('/login')
       }
+    },
+
+    // 侧边栏折叠
+    collapseChage () {
+      this.collapse = !this.collapse
+      // 通过bus发送信息
+      bus.$emit('collapse', this.collapse)
     },
 
     // 全屏事件
     handleFullScreen () {
       // 获取文档对象的根元素
-      let element = document.documentElement;
+      let element = document.documentElement
       if (this.fullscreen) {
         // 设置不同浏览器下的退出全屏模式
+        // -webkit- 兼容chrome 和 safari
+        // -moz- 兼容firefox
+        // -ms- 兼容IE浏览器
+        // -o- 兼容opera
         if (document.exitFullscreen) {
           document.exitFullscreen()
         } else if (document.webkitCancelFullScreen) {
@@ -122,6 +138,7 @@ export default {
         } else if (element.mozRequestFullScreen) {
           element.mozRequestFullScreen()
         } else if (element.msRequestFullscreen) {
+          // IE11
           element.msRequestFullscreen()
         }
       }
@@ -129,93 +146,93 @@ export default {
     }
   },
 
-  // 初始化页面完成后，对页面可见区域宽度进行判定，
-  // 如果也买你宽度小于1500，则触发collpaseChage方法
+  // 初始化页面完成后，对页面可见区域宽度进行判定，如果页面宽度小于1500，则触发 collapseChage 方法。
   mounted () {
     if (document.body.clientWidth < 1500) {
       this.collapseChage()
     }
 
-    // 通过bus通信获取message的值
+    // 通过 bus 通信获取 message 的值。
     bus.$on('msg', (e) => {
       this.message = e
     })
   }
-
 }
 </script>
-
+<!-- CSS样式 -->
 <style scoped>
 .header {
-  position: relative;
-  box-sizing: border-box;
-  width: 100%;
-  height: 70px;
-  font-size: 22px;
-  color: #fff;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 70px;
+    font-size: 22px;
+    color: #fff;
 }
 .collapse-btn {
-  float: left;
-  padding: 0 21px;
-  cursor: pointer;
-  line-height: 70px;
+    float: left;
+    padding: 0 21px;
+    cursor: pointer;
+    line-height: 70px;
 }
 .header .logo {
-  float: left;
-  width:L 250px;
-  line-height: 70px;
+    float: left;
+    width: 250px;
+    line-height: 70px;
 }
 .header-right {
-  float: right;
-  padding-right: 50px;
+    float: right;
+    padding-right: 50px;
 }
 .header-user-con {
-  display: flex;
-  height: 70px;
-  align-items: center;
+    display: flex;
+    height: 70px;
+    align-items: center;
 }
 .btn-fullscreen {
-  transform: rotate(45deg);
-  margin-right: 5px;
-  font-size: 24px;
+    transform: rotate(45deg);
+    margin-right: 5px;
+    font-size: 24px;
 }
 .btn-bell,
 .btn-fullscreen {
-  position: relative;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  border-radius: 15px;
-  cursor: pointer;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border-radius: 15px;
+    cursor: pointer;
 }
 .btn-bell-badge {
-  position: absolute;
-  right: 0;
-  top: -2px;
-  width: 8px;
-  border-radius: 4px;
-  background: #f56c6c;
-  color: #fff;
+    position: absolute;
+    right: 0;
+    top: -2px;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: #f56c6c;
+    color: #fff;
 }
 .btn-bell .el-icon-bell {
-  color: #fff;
+    color: #fff;
 }
 .user-name {
-  margin-left: 20px;
+    margin-left: 10px;
 }
 .user-avator {
-  margin-left: 20px;
+    margin-left: 20px;
 }
 .user-avator img {
-  display: block;
-  width: 40px;
-  border-radius: 50%;
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }
 .el-dropdown-link {
-  color: #fff;
-  cursor: pointer;
+    color: #fff;
+    cursor: pointer;
 }
 .el-dropdown-menu__item {
-  text-align: center;
+    text-align: center;
 }
 </style>
